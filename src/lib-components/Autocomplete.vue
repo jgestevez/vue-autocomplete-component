@@ -1,8 +1,8 @@
 <script>
-import Vue from 'vue';
+import Vue from "vue";
 
 export default Vue.extend({
-  name: 'Autocomplete',
+  name: "Autocomplete",
   props: {
     options: {
       type: Array,
@@ -16,7 +16,7 @@ export default Vue.extend({
     defaultValue: {
       type: [String, Number],
       required: false,
-      default: '',
+      default: "",
     },
     onSearchComplete: {
       type: Function,
@@ -45,17 +45,22 @@ export default Vue.extend({
     placeholderText: {
       type: String,
       required: false,
-      default: '',
+      default: "",
+    },
+    items: {
+      type: Number,
+      require: false,
+      default: 5,
     },
     loadingText: {
       type: String,
       required: false,
-      default: 'Loading results...',
+      default: "Loading results...",
     },
     emptyResultText: {
       type: String,
       required: false,
-      default: 'No matching results found',
+      default: "No matching results found",
     },
   },
 
@@ -64,7 +69,7 @@ export default Vue.extend({
       isOpen: false,
       results: [],
       resultApi: [],
-      searchValue: '',
+      searchValue: "",
       isLoading: false,
       arrowCounter: -1,
       value: this.defaultValue,
@@ -81,7 +86,19 @@ export default Vue.extend({
           if (this.onSearchComplete) {
             this.onSearchComplete();
           }
-          this.results = this.transformResult ? this.transformResult(data) : data;
+          this.results = this.transformResult
+            ? this.transformResult(data)
+            : data;
+          
+          if (this.results.length == 0) {
+            this.$refs.scrollContainer.style.height = "48px";
+          } else if (this.results.length < this.items) {
+            this.$refs.scrollContainer.style.height =
+              this.results.length * 48 + "px";
+          } else if (this.results.length >= this.items) {
+            this.$refs.scrollContainer.style.height = this.items * 48 + "px";
+          }
+          
           this.isLoading = false;
           this.firstSearch = true;
         })
@@ -96,13 +113,13 @@ export default Vue.extend({
     },
 
     onChange() {
-      this.$emit('input', this.searchValue);
-      if (this.searchApi) {
+      this.$emit("input", this.searchValue);
+      if (this.searchApi && this.searchValue) {
         clearTimeout(this.debounce);
         this.debounce = setTimeout(() => {
           this.onSearch();
         }, 300);
-      } else {
+      } else if (!this.searchApi) {
         this.results = this.options.filter((item) => {
           return (
             item.label.toLowerCase().indexOf(this.searchValue.toLowerCase()) >
@@ -110,11 +127,15 @@ export default Vue.extend({
           );
         });
       }
-      this.isOpen = true;
+      if (this.searchValue) {
+        this.isOpen = true;
+      } else {
+        this.isOpen = false;
+      }
     },
 
     onFocus() {
-      this.isOpen = true;
+      if (this.searchValue) this.isOpen = true;
     },
 
     setResult(result) {
@@ -150,11 +171,13 @@ export default Vue.extend({
 
     fixScrolling() {
       if (this.arrowCounter > -1) {
-        const element = this.$refs.scrollContainer.querySelectorAll('li')[this.arrowCounter];
+        const element = this.$refs.scrollContainer.querySelectorAll("li")[
+          this.arrowCounter
+        ];
         element.scrollIntoView({
-          behavior: 'smooth',
-          block: 'nearest',
-          inline: 'start',
+          behavior: "smooth",
+          block: "nearest",
+          inline: "start",
         });
       }
     },
@@ -192,11 +215,10 @@ export default Vue.extend({
         this.onClose();
       }
     },
-
   },
 
   mounted() {
-    document.addEventListener('click', this.handleClickOutside);
+    document.addEventListener("click", this.handleClickOutside);
     if (!this.searchApi && this.options) {
       this.results = this.options;
       if (this.defaultValue) {
@@ -207,10 +229,11 @@ export default Vue.extend({
         this.searchValue = defaultLabel.label;
       }
     }
+    this.$refs.scrollContainer.style.height = this.items * 48 + "px";
   },
 
   unmounted() {
-    document.removeEventListener('click', this.handleClickOutside);
+    document.removeEventListener("click", this.handleClickOutside);
   },
 });
 </script>
@@ -268,13 +291,13 @@ export default Vue.extend({
 .vue-autocomplete-component__autocomplete {
   position: relative;
   width: 100%;
-  max-width: 400px;
   background-color: #fff;
   border-radius: 4px;
   box-shadow: 0 1px 3px 0 rgba(60, 64, 67, 0.3),
     0 4px 8px 3px rgba(60, 64, 67, 0.15);
   font-family: Arial, sans-serif;
-  overflow: hidden;
+  overflow: visible;
+  height: 48px;
 }
 
 .vue-autocomplete-component__input-wrapper input {
@@ -318,9 +341,11 @@ export default Vue.extend({
   padding: 0;
   margin: 0;
   height: 100%;
-  max-height: 400px;
   overflow: auto;
   width: 100%;
+  background: white;
+  box-shadow: 0 1px 3px 0 rgba(60, 64, 67, 0.3),
+    0 4px 8px 3px rgba(60, 64, 67, 0.15);
 }
 
 .vue-autocomplete-component__autocomplete-result {
@@ -373,6 +398,8 @@ export default Vue.extend({
 
   .vue-autocomplete-component__autocomplete-results {
     max-height: 100%;
+    height: 100% !important;
+    box-shadow: none;
   }
 }
 </style>
