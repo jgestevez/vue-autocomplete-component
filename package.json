@@ -1,7 +1,7 @@
 {
   "name": "vue-autocomplete-component",
-  "version": "1.0.2",
-  "description": "",
+  "version": "1.0.4",
+  "description": "```bash\r $ yarn add vue-autocomplete-component\r # npm install vue-autocomplete-component --save\r ```",
   "main": "dist/autocomplete-component.ssr.js",
   "browser": "dist/autocomplete-component.esm.js",
   "module": "dist/autocomplete-component.esm.js",
@@ -43,5 +43,19 @@
   },
   "engines": {
     "node": ">=12"
-  }
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/jgestevez/vue-autocomplete-component.git"
+  },
+  "keywords": [
+    "vue",
+    "autocomplete"
+  ],
+  "author": "Gabriel Estevez",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/jgestevez/vue-autocomplete-component/issues"
+  },
+  "homepage": "https://github.com/jgestevez/vue-autocomplete-component#readme"
 }
