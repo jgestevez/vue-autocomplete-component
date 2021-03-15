@@ -89,7 +89,7 @@ export default Vue.extend({
           this.results = this.transformResult
             ? this.transformResult(data)
             : data;
-          
+
           if (this.results.length == 0) {
             this.$refs.scrollContainer.style.height = "48px";
           } else if (this.results.length < this.items) {
@@ -98,9 +98,10 @@ export default Vue.extend({
           } else if (this.results.length >= this.items) {
             this.$refs.scrollContainer.style.height = this.items * 48 + "px";
           }
-          
+
           this.isLoading = false;
           this.firstSearch = true;
+          this.isOpen = true;
         })
         .catch((err) => {
           if (this.onSearchError) {
@@ -127,15 +128,12 @@ export default Vue.extend({
           );
         });
       }
-      if (this.searchValue) {
-        this.isOpen = true;
-      } else {
-        this.isOpen = false;
-      }
+      if (!this.searchValue) this.isOpen = false;
     },
 
     onFocus() {
-      if (this.searchValue) this.isOpen = true;
+      if (this.searchValue && !this.isLoading) this.isOpen = true;
+      if (window.screen.availWidth < 768) this.isOpen = true;
     },
 
     setResult(result) {
@@ -319,6 +317,11 @@ export default Vue.extend({
   display: flex;
 }
 
+.vue-autocomplete-component__autocomplete.is-open {
+  border-bottom-left-radius: 0;
+  border-bottom-right-radius: 0;
+  z-index: 100;
+}
 .vue-autocomplete-component__autocomplete.is-open
   .vue-autocomplete-component__input-wrapper {
   border-bottom: 1px solid #dadce0;
@@ -382,6 +385,9 @@ export default Vue.extend({
     left: 0;
     width: 100vw;
     height: 100vh;
+    z-index: 1000;
+    border-top-left-radius: 0;
+    border-top-right-radius: 0;
   }
 
   .vue-autocomplete-component__autocomplete.is-open
