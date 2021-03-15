@@ -1,6 +1,6 @@
 {
   "name": "vue-autocomplete-component",
-  "version": "1.0.7",
+  "version": "1.1.0",
   "description": "```bash\r $ yarn add vue-autocomplete-component\r # npm install vue-autocomplete-component --save\r ```",
   "main": "dist/autocomplete-component.ssr.js",
   "browser": "dist/autocomplete-component.esm.js",
