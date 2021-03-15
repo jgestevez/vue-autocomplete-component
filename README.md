@@ -19,6 +19,7 @@ $ yarn add vue-autocomplete-component
       'https://5e0deade36b80000143db93c.mockapi.io/get-options?search'
     "
     :defaultValue="3"
+    :items="3"
     :onSearchComplete="onSearchComplete"
     :onSearchError="onSearchError"
     :onSelect="onSelect"
@@ -74,3 +75,5 @@ export default {
 | transformResult  | Func           | handle when data dropdown is change                                                                             |
 | placeholderText  | String         | custom placeholder input                                                                                        |
 | loadingText      | String         | custom loading text                                                                                             |
+| items      | Number         | How many results to show at once (only for screen width > 768px)                                                                                             |
+
